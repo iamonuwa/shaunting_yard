@@ -104,14 +104,27 @@ impl ShuntingYard {
         let first_digit = self.output.pop().unwrap();
         let second_digit = self.output.pop().unwrap();
         let result = match op {
-            'a' => first_digit + second_digit,
-            'b' => first_digit - second_digit,
+            'a' => second_digit + first_digit,
+            'b' => second_digit - first_digit,
             'c' => first_digit * second_digit,
-            'd' => first_digit / second_digit,
+            'd' => second_digit / first_digit,
             _ => 0.0, // @todo return empty here
         };
 
         // send result to output stack.
         self.output.push(result);
+    }
+}
+
+#[allow(clippy::float_cmp)]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_shunting_yard_algorithm() {
+        assert_eq!(ShuntingYard::create("3a2c4").evaluate(), 20.0);
+        assert_eq!(ShuntingYard::create("32a2d2").evaluate(), 17.0);
+        assert_eq!(ShuntingYard::create("500a10b66c32").evaluate(), 14208.0);
     }
 }
